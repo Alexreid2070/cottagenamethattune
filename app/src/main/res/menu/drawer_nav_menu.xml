@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item
+        android:id="@+id/navigation_home"
+        android:title="@string/title_play" />
+
+    <item
+        android:id="@+id/navigation_view_all_songs"
+        android:title="@string/title_view_all_songs" />
+
+    <item
+        android:id="@+id/navigation_song"
+        android:title="@string/title_add_song" />
+</menu>

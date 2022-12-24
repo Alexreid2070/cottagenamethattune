@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SongFragment">
+
+    <EditText
+        android:id="@+id/track_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:background="@color/fui_transparent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@drawable/edit_text_selector" />
+
+    <EditText
+        android:id="@+id/track_artist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:paddingBottom="5dp"
+        android:background="@color/fui_transparent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/track_title"
+        android:textColor="@drawable/edit_text_selector" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/track_image_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        app:cardCornerRadius="50dp"
+        app:cardElevation="0dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/track_artist">
+
+        <ImageView
+            android:id="@+id/track_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/uri"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/track_image_card" />
+    <TextView
+        android:id="@+id/imageuri"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/track_image_card" />
+
+    <ScrollView
+        android:id="@+id/scroll_lyrics"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:padding="5dp"
+        android:fadeScrollbars="false"
+        app:layout_constraintBottom_toTopOf="@+id/buttonLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/uri">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/lyrics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:background="@color/fui_transparent"
+                android:hint="paste lyrics here"
+                android:textColor="@drawable/edit_text_selector" />
+            <TextView
+                android:id="@+id/forbidden_lyrics_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="Forbidden Lyrics"/>
+            <EditText
+                android:id="@+id/forbidden_lyrics"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:background="@color/fui_transparent"
+                android:hint="Add forbidden lyrics here"
+                android:textColor="@drawable/edit_text_selector" />
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scroll_lyrics">
+
+        <ImageButton
+            android:id="@+id/load_from_spotify_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:tooltipText="Load current song from Spotify"
+            android:src="@drawable/ic_baseline_music_note_24"/>
+
+        <ImageButton
+            android:id="@+id/search_for_lyrics_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:tooltipText="Search for lyrics"
+            android:src="@drawable/ic_baseline_manage_search_24"/>
+        <ImageButton
+            android:id="@+id/cancel_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:src="@drawable/ic_baseline_cancel_24"/>
+        <ImageButton
+            android:id="@+id/save_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:src="@drawable/ic_baseline_save_24"/>
+        <ImageButton
+            android:id="@+id/prev_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:src="@drawable/ic_baseline_arrow_left_24"/>
+        <ImageButton
+            android:id="@+id/play_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:src="@drawable/ic_baseline_play_arrow_24"/>
+        <ImageButton
+            android:id="@+id/next_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:src="@drawable/ic_baseline_arrow_right_24"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

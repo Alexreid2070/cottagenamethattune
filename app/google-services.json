@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "159385437888",
+    "firebase_url": "https://cottagenamethattune-default-rtdb.firebaseio.com",
+    "project_id": "cottagenamethattune",
+    "storage_bucket": "cottagenamethattune.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159385437888:android:50ca7ebc7552af6a538f25",
+        "android_client_info": {
+          "package_name": "com.android.isrbet.cottagenamethattune"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "159385437888-nueisnh96cnh2pi6kam1qa8h6ruqrofq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.android.isrbet.cottagenamethattune",
+            "certificate_hash": "3fcc675a0eecb1b0e719ced2522b49304637313d"
+          }
+        },
+        {
+          "client_id": "159385437888-48dj2c5r126c1k0freo9ss9nj7i5nlr0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl5sQL3l9Ce3EXA_JWadBy3PdOFdxVRlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "159385437888-48dj2c5r126c1k0freo9ss9nj7i5nlr0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

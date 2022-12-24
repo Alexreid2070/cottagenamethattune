@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.android.isrbet.cottagenamethattune.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home">
+    <argument
+        android:name="trackURI"
+        app:argType="string"
+        android:defaultValue=''/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_view_all_songs"
+        android:name="com.android.isrbet.cottagenamethattune.ViewAllSongsFragment"
+        android:label="@string/title_view_all_songs"
+        tools:layout="@layout/fragment_view_all_songs">
+        <action
+            android:id="@+id/action_ViewAllFragment_to_AddSongFragment"
+            app:destination="@id/navigation_song" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_song"
+        android:name="com.android.isrbet.cottagenamethattune.SongFragment"
+        android:label="@string/title_view_song"
+        tools:layout="@layout/fragment_song">
+        <action
+            android:id="@+id/action_SongFragment_to_HomeFragment"
+            app:destination="@id/navigation_home" />
+        <argument
+            android:name="trackURI"
+            app:argType="string"
+            android:defaultValue=''/>
+    </fragment>
+</navigation>

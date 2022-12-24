@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/sort_by_song"
+        android:title="Sort by Song Name" />
+    <item
+        android:id="@+id/sort_by_artist"
+        android:title="Sort by Artist Name" />
+    <item
+        android:id="@+id/sort_by_date_added"
+        android:title="Sort by Date Added" />
+    <item
+        android:id="@+id/sort_by_play_order"
+        android:title="Sort by Play Order" />
+    <item
+        android:id="@+id/search_for_song"
+        android:icon="@drawable/ic_baseline_search_24"
+        app:showAsAction="ifRoom"
+        android:title="Search"/>
+    <item
+        android:id="@+id/start_new_game"
+        android:title="Start New Game"/>
+    <item
+        android:id="@+id/play"
+        android:icon="@drawable/ic_baseline_music_note_24_white"
+        app:showAsAction="ifRoom"
+        android:title="Play song"/>
+    <item
+        android:id="@+id/edit"
+        android:icon="@drawable/ic_baseline_edit_24_white"
+        app:showAsAction="ifRoom"
+        android:title="Edit song"/>
+    <item
+        android:id="@+id/delete"
+        android:icon="@drawable/ic_baseline_delete_24_white"
+        app:showAsAction="ifRoom"
+        android:title="Delete song"/>
+    <item
+        android:id="@+id/decrease_text_size"
+        android:icon="@drawable/ic_baseline_text_decrease_24"
+        app:showAsAction="ifRoom"
+        android:title="Decrease font size"/>
+    <item
+        android:id="@+id/increase_text_size"
+        android:icon="@drawable/ic_baseline_text_increase_24"
+        app:showAsAction="ifRoom"
+        android:title="Increase font size"/>
+</menu>

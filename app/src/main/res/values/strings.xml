@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">CottageNameThatTune</string>
+    <string name="title_home">Name That Artist and Tune!</string>
+    <string name="title_play">Play!</string>
+    <string name="title_view_all_songs">View All Songs</string>
+    <string name="title_add_song">Add Song</string>
+    <string name="field_is_required">Field is required</string>
+    <string name="title_view_song">View Song</string>
+    <string name="song_deleted">Song was deleted.</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="are_you_sure_that_you_want_to_delete_this_item_NP">Are you sure that you want to delete this song?</string>
+</resources>
