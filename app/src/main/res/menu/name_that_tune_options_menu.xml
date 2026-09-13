@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/decrease_text_size"
+        android:icon="@drawable/ic_baseline_text_decrease_24"
+        app:showAsAction="ifRoom"
+        android:title="@string/decrease_font_size"/>
+    <item
+        android:id="@+id/increase_text_size"
+        android:icon="@drawable/ic_baseline_text_increase_24"
+        app:showAsAction="ifRoom"
+        android:title="@string/increase_font_size"/>
+</menu>

@@ -6,153 +6,73 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <TextView
-        android:id="@+id/track_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/track_artist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/track_title" />
-
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/track_artist" />
-
-    <ScrollView
-        android:id="@+id/scroll_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:padding="5dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonLayout"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sign_in_button">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/track_image_card"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                app:cardCornerRadius="50dp"
-                app:cardElevation="0dp"
-                android:paddingBottom="15dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/track_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1" />
-            </androidx.cardview.widget.CardView>
-
-            <TextView
-                android:id="@+id/lyrics"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:textSize="14sp"/>
-        </LinearLayout>
-    </ScrollView>
-
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-        <ImageButton
-            android:id="@+id/play_prev_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:layout_margin="15dp"
-            android:contentDescription="Skip to previous"
-            android:elevation="4dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_skip_previous_24"
-            android:stateListAnimator="@animator/anim"/>
-        <ImageButton
-            android:id="@+id/replay_button"
+        <Button
+            android:id="@+id/start_name_that_tune_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:text="@string/title_name_that_tune"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/red"
             android:layout_margin="15dp"
-            android:contentDescription="Replay"
+            android:contentDescription="@string/title_name_that_tune"
             android:elevation="4dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_replay_24"
-            android:stateListAnimator="@animator/anim"/>
-        <ImageButton
-            android:id="@+id/play_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@color/green"
-            android:layout_margin="15dp"
-            android:contentDescription="Play"
-            android:elevation="4dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_play_arrow_24"
-            android:stateListAnimator="@animator/anim"/>
-        <ImageButton
-            android:id="@+id/play_next_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@color/white"
-            android:layout_margin="15dp"
-            android:contentDescription="Skip to next"
-            android:elevation="4dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_baseline_skip_next_24"
             android:stateListAnimator="@animator/anim"/>
         <Button
-            android:id="@+id/start_game_button"
-            android:layout_width="0dp"
+            android:id="@+id/start_celebrity_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="Start Game"
+            android:text="@string/title_celebrity"
+            android:textSize="20sp"
             android:textColor="@color/white"
+            android:backgroundTint="@color/teal_700"
             android:layout_margin="15dp"
-            android:contentDescription="Start new game"
+            android:contentDescription="@string/title_celebrity"
             android:elevation="4dp"
-            android:visibility="gone"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"/>
+        <Button
+            android:id="@+id/start_when_was_that_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="@string/title_when_was_that"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/orange"
+            android:layout_margin="15dp"
+            android:contentDescription="@string/title_when_was_that"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"/>
+        <Button
+            android:id="@+id/do_something_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Do Something for Alex"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/red"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
             android:scaleType="fitCenter"
             android:stateListAnimator="@animator/anim"/>
     </LinearLayout>

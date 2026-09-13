@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!-- Fill color of the circle -->
+    <solid android:color="#99999999" />
+
+    <!-- Optional: Equal width and height to force a circle -->
+    <size
+        android:width="100dp"
+        android:height="100dp" />
+
+    <!-- Optional: Border stroke -->
+    <stroke
+        android:width="2dp"
+        android:color="#000000" />
+
+</shape>

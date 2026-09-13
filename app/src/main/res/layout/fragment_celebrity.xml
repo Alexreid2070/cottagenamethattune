@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CelebrityFragment">
+
+    <EditText
+        android:id="@+id/celebrity_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:text="@string/celebrity"
+        android:background="@color/fui_transparent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/celebrity_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        android:hint="Celebrity name"
+        android:minWidth="180dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        app:endIconMode="clear_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/celebrity_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/celebrity_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="start"
+            android:inputType="textCapWords"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/celebrity_name_layout">
+
+        <ImageButton
+            android:id="@+id/cancel_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:src="@drawable/ic_baseline_cancel_24"/>
+        <ImageButton
+            android:id="@+id/save_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:src="@drawable/ic_baseline_save_24"/>
+        <ImageButton
+            android:id="@+id/prev_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:src="@drawable/ic_baseline_arrow_left_24"/>
+        <ImageButton
+            android:id="@+id/next_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@color/white"
+            android:layout_margin="15dp"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:src="@drawable/ic_baseline_arrow_right_24"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

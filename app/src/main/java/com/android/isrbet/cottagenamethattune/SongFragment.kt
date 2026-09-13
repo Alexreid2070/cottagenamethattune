@@ -13,6 +13,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.android.isrbet.cottagenamethattune.databinding.FragmentSongBinding
 import com.spotify.protocol.types.ImageUri
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
+import timber.log.Timber
+import androidx.core.view.isVisible
 
 
 class SongFragment : Fragment() {
@@ -24,7 +28,6 @@ class SongFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         addTrackMode = args.trackURI == ""
         currentlyViewing = TrackViewModel.getTrackInd(args.trackURI)
 //        TrackViewModel.setIndOfLastViewed(currentlyViewing)
@@ -38,8 +41,39 @@ class SongFragment : Fragment() {
 
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val menuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                // Add menu items here
+                menu.clear()
+                if (MyApplication.adminMode)
+                    menuInflater.inflate(R.menu.edit_options_menu, menu)
+                else
+                    menuInflater.inflate(R.menu.empty_options_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Handle the menu selection
+                return when (menuItem.itemId) {
+                    R.id.edit -> {
+                        editTrack()
+                        true
+                    }
+
+                    R.id.delete -> {
+                        deleteTrack()
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
         binding.loadFromSpotifyButton.setOnClickListener {
             loadFromSpotify()
         }
@@ -79,40 +113,52 @@ class SongFragment : Fragment() {
             binding.nextButton.visibility = View.GONE
             binding.playButton.visibility = View.GONE
             if (!(activity as MainActivity).isSpotifyInstalled()) {
-                binding.trackArtist.setText("There is no Spotify service available")
+                binding.trackArtist.setText(getString(R.string.there_is_no_spotify_service_available))
                 binding.buttonLayout.visibility = View.GONE
             } else {
                 loadFromSpotify()
             }
         } else {
-            (activity as AppCompatActivity?)!!.supportActionBar!!.title = "View Song (${currentlyViewing+1}/${TrackViewModel.getCount()})"
+            (activity as AppCompatActivity?)!!.supportActionBar!!.title =
+                "View Song (${currentlyViewing + 1}/${TrackViewModel.getCount()})"
             val myTrack = TrackViewModel.getTrack(currentlyViewing)
             if (myTrack != null) {
                 displayTrack(myTrack)
             }
             setToViewMode()
         }
+        if (!(activity as MainActivity).isSpotifyInstalled()) {
+            binding.trackTitle.visibility = View.VISIBLE
+            binding.trackTitle.setText(getString(R.string.there_is_no_spotify_service_available))
+        }
     }
+
     private fun displayTrack(myTrack: MyTrack) {
         binding.trackTitle.setText(myTrack.songName)
         binding.trackArtist.setText(myTrack.artistName)
         binding.uri.text = myTrack.uri
         binding.imageuri.text = myTrack.imageUri
+        binding.releaseYear.setText(if (myTrack.releaseYear != 0) myTrack.releaseYear.toString() else "<year>")
         binding.lyrics.setText(myTrack.getSpannedLyrics())
         binding.forbiddenLyrics.setText(myTrack.getForbiddenLyrics())
         if (myTrack.imageUri == "") {
             binding.trackImage.setImageBitmap(null)
         } else {
             val imageUri = ImageUri(myTrack.imageUri)
-            SpotifyService.getImage(requireContext(), imageUri) { bitmap ->
-                binding.trackImage.setImageBitmap(bitmap)
+
+            if (SpotifyService.isConnected()) {
+                SpotifyService.getImage(requireContext(), imageUri) { bitmap ->
+                    binding.trackImage.setImageBitmap(bitmap)
+                }
             }
         }
         binding.playButton.visibility = View.VISIBLE
     }
+
     private fun setToEditMode() {
         binding.trackArtist.isEnabled = true
         binding.trackTitle.isEnabled = true
+        binding.releaseYear.isEnabled = true
         binding.lyrics.isEnabled = true
         binding.forbiddenLyrics.isEnabled = true
         binding.saveButton.visibility = View.VISIBLE
@@ -125,9 +171,11 @@ class SongFragment : Fragment() {
         binding.playButton.visibility = View.GONE
         binding.trackTitle.setBackgroundColor(Color.YELLOW)
         binding.trackArtist.setBackgroundColor(Color.YELLOW)
+        binding.releaseYear.setBackgroundColor(Color.YELLOW)
         binding.lyrics.setBackgroundColor(Color.YELLOW)
         binding.forbiddenLyrics.setBackgroundColor(Color.YELLOW)
     }
+
     private fun setToViewMode() {
         binding.loadFromSpotifyButton.visibility = View.GONE
         binding.searchForLyricsButton.visibility = View.GONE
@@ -140,6 +188,7 @@ class SongFragment : Fragment() {
         binding.nextButton.isEnabled = true
         binding.trackArtist.isEnabled = false
         binding.trackTitle.isEnabled = false
+        binding.releaseYear.isEnabled = false
         binding.lyrics.visibility = View.VISIBLE
         binding.lyrics.isEnabled = false
         binding.forbiddenLyricsTitle.visibility = View.VISIBLE
@@ -147,29 +196,47 @@ class SongFragment : Fragment() {
         binding.forbiddenLyrics.isEnabled = false
         binding.trackTitle.setBackgroundColor(Color.TRANSPARENT)
         binding.trackArtist.setBackgroundColor(Color.TRANSPARENT)
+        binding.releaseYear.setBackgroundColor(Color.TRANSPARENT)
         binding.lyrics.setBackgroundColor(Color.TRANSPARENT)
         binding.forbiddenLyrics.setBackgroundColor(Color.TRANSPARENT)
     }
+
     private fun loadFromSpotify() {
+        if (!SpotifyService.isConnected()) {
+            Toast.makeText(
+                MyApplication.myMainActivity,
+                "Spotify is not currently available.",
+                Toast.LENGTH_LONG
+            ).show()
+
+            return
+        }
         SpotifyService.getCurrentTrack(requireContext()) { track ->
             val myTrack = TrackViewModel.getTrack(track.uri, track.name, track.artist.name)
             if (myTrack != null) {
                 displayTrack(myTrack)
                 setToViewMode()
 //                binding.lyrics.setText(myTrack.getSpannedLyrics())
-  //              binding.forbiddenLyrics.setText(myTrack.getForbiddenLyrics())
+                //              binding.forbiddenLyrics.setText(myTrack.getForbiddenLyrics())
                 addTrackMode = false
                 activity?.invalidateOptionsMenu()
                 currentlyViewing = TrackViewModel.getTrackInd(myTrack.uri)
 //                TrackViewModel.setIndOfLastViewed(currentlyViewing)
-                (activity as AppCompatActivity?)!!.supportActionBar!!.title = "View Song (${currentlyViewing+1}/${TrackViewModel.getCount()})"
+                (activity as AppCompatActivity?)!!.supportActionBar!!.title =
+                    "View Song (${currentlyViewing + 1}/${TrackViewModel.getCount()})"
             } else {
+                Timber.tag("Alex").d("Album is ${track.album}")
+
                 binding.trackTitle.setText(track.name)
                 binding.trackArtist.setText(track.artist.name)
+                binding.releaseYear.setText(getString(R.string.unknown_year))
                 binding.uri.text = track.uri
                 binding.imageuri.text = track.imageUri.raw
-                SpotifyService.getImage(requireContext(), track.imageUri) { bitmap ->
-                    binding.trackImage.setImageBitmap(bitmap)
+                if (SpotifyService.isConnected()) {
+
+                    SpotifyService.getImage(requireContext(), track.imageUri) { bitmap ->
+                        binding.trackImage.setImageBitmap(bitmap)
+                    }
                 }
                 binding.searchForLyricsButton.isEnabled = true
 //                setToEditMode()
@@ -177,10 +244,11 @@ class SongFragment : Fragment() {
                 binding.forbiddenLyrics.setText(track.name)
                 (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Add Song"
                 binding.loadFromSpotifyButton.visibility = View.GONE
-                searchForLyrics()
+//                searchForLyrics()
             }
         }
     }
+
     private fun searchForLyrics() {
         val intent = Intent(Intent.ACTION_WEB_SEARCH)
         val term = "lyrics " + binding.trackTitle.text + " " + binding.trackArtist.text
@@ -192,46 +260,47 @@ class SongFragment : Fragment() {
         binding.saveButton.isEnabled = true
         setToEditMode()
     }
+
     private fun saveTrack() {
         var findString = "Overview\n\n"
         var prefix = binding.lyrics.text.toString().indexOf(findString)
         if (prefix != -1) {
-            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString,"", true))
+            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString, "", true))
         }
         findString = "Lyrics\n\n"
         prefix = binding.lyrics.text.toString().indexOf(findString)
         if (prefix != -1) {
-            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString,"", true))
+            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString, "", true))
         }
         findString = "Videos\n\n"
         prefix = binding.lyrics.text.toString().indexOf(findString)
         if (prefix != -1) {
-            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString,"", true))
+            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString, "", true))
         }
         findString = "Listen\n\n"
         prefix = binding.lyrics.text.toString().indexOf(findString)
         if (prefix != -1) {
-            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString,"", true))
+            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString, "", true))
         }
         findString = "Artists\n\n"
         prefix = binding.lyrics.text.toString().indexOf(findString)
         if (prefix != -1) {
-            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString,"", true))
+            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString, "", true))
         }
         findString = "Analysis\n\n"
         prefix = binding.lyrics.text.toString().indexOf(findString)
         if (prefix != -1) {
-            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString,"", true))
+            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString, "", true))
         }
         findString = "Main Results\n\n"
         prefix = binding.lyrics.text.toString().indexOf(findString)
         if (prefix != -1) {
-            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString,"", true))
+            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString, "", true))
         }
         findString = "Other recordings\n\n"
         prefix = binding.lyrics.text.toString().indexOf(findString)
         if (prefix != -1) {
-            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString,"", true))
+            binding.lyrics.setText(binding.lyrics.text.toString().replace(findString, "", true))
         }
         if (binding.trackTitle.text.toString() == "") {
             binding.trackTitle.error = getString(R.string.field_is_required)
@@ -243,33 +312,45 @@ class SongFragment : Fragment() {
             focusAndOpenSoftKeyboard(requireContext(), binding.trackArtist)
             return
         }
-        if (binding.lyrics.text.toString() == "") {
+        if (binding.releaseYear.text.toString() == "" ||
+            binding.releaseYear.text.toString().toIntOrNull() == null ||
+            binding.releaseYear.text.toString().toInt() == 0
+        ) {
+            binding.releaseYear.error = getString(R.string.field_is_required)
+            focusAndOpenSoftKeyboard(requireContext(), binding.releaseYear)
+            return
+        }
+        if (binding.releaseYear.text.toString() == "" && binding.lyrics.text.toString() == "") {
             binding.lyrics.error = getString(R.string.field_is_required)
             focusAndOpenSoftKeyboard(requireContext(), binding.lyrics)
             return
         }
-        if (binding.forbiddenLyrics.text.toString() == "") {
+        if (binding.forbiddenLyrics.isVisible && binding.forbiddenLyrics.text.toString() == "") {
             binding.forbiddenLyrics.error = getString(R.string.field_is_required)
             focusAndOpenSoftKeyboard(requireContext(), binding.forbiddenLyrics)
             return
         }
-        val lyrics: List<String> = binding.lyrics.text.trim().toString().split("\n").map { it.trim() }
-        val lyricsML:MutableList<String> = ArrayList(lyrics)
-        val forbiddenLyrics: List<String> = binding.forbiddenLyrics.text.trim().toString().split("\n").map { it.trim() }
-        val forbiddenLyricsML:MutableList<String> = ArrayList(forbiddenLyrics)
+        val lyrics: List<String> =
+            binding.lyrics.text.trim().toString().split("\n").map { it.trim() }
+        val lyricsML: MutableList<String> = ArrayList(lyrics)
+        val forbiddenLyrics: List<String> =
+            binding.forbiddenLyrics.text.trim().toString().split("\n").map { it.trim() }
+        val forbiddenLyricsML: MutableList<String> = ArrayList(forbiddenLyrics)
         if (addTrackMode) {
-            val myTrack = MyTrack(binding.trackTitle.text.toString(),
+            val myTrack = MyTrack(
+                binding.trackTitle.text.toString(),
                 binding.trackArtist.text.toString(),
                 binding.uri.text.toString(),
                 binding.imageuri.text.toString(),
-                giveMeDate(),
-                TrackViewModel.getCount(),
+                binding.releaseYear.text.toString().toInt(),
                 lyricsML,
-                forbiddenLyricsML)
+                forbiddenLyricsML
+            )
             if (TrackViewModel.addTrack(myTrack)) {
-                Toast.makeText(MyApplication.myMainActivity, "Track added!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(MyApplication.myMainActivity, "Track added!", Toast.LENGTH_SHORT)
+                    .show()
 //                binding.trackImage.setImageBitmap(null)
-                MyApplication.playSound(context, SoundAction.ADD_SONG)
+                MyApplication.playSound(SoundAction.ADD_ITEM)
 //                activity?.onBackPressed()
                 setToViewMode()
                 binding.lyrics.setText(myTrack.getSpannedLyrics())
@@ -278,42 +359,51 @@ class SongFragment : Fragment() {
                 activity?.invalidateOptionsMenu()
                 currentlyViewing = TrackViewModel.getTrackInd(myTrack.uri)
 //                TrackViewModel.setIndOfLastViewed(currentlyViewing)
-                (activity as AppCompatActivity?)!!.supportActionBar!!.title = "View Song (${currentlyViewing+1}/${TrackViewModel.getCount()})"
+                (activity as AppCompatActivity?)!!.supportActionBar!!.title =
+                    "View Song (${currentlyViewing + 1}/${TrackViewModel.getCount()})"
             } else
-                Toast.makeText(MyApplication.myMainActivity, "Track already exists in database, not added.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    MyApplication.myMainActivity,
+                    "Track already exists in database, not added.",
+                    Toast.LENGTH_SHORT
+                ).show()
         } else {
             currentlyViewing = TrackViewModel.getTrackInd(binding.uri.text.toString())
             val currentTrack = TrackViewModel.getTrack(currentlyViewing)
-            val newTrack = MyTrack(binding.trackTitle.text.toString(),
+            val newTrack = MyTrack(
+                binding.trackTitle.text.toString(),
                 binding.trackArtist.text.toString(),
                 binding.uri.text.toString(),
                 binding.imageuri.text.toString(),
-                giveMeDate(),
-                TrackViewModel.getCount(),
+                binding.releaseYear.text.toString().toInt(),
                 lyricsML,
-                forbiddenLyricsML)
+                forbiddenLyricsML
+            )
             TrackViewModel.editTrack(currentTrack, newTrack)
-            MyApplication.playSound(context, SoundAction.EDIT_SONG)
+            MyApplication.playSound(SoundAction.EDIT_ITEM)
 //                activity?.onBackPressed()
             setToViewMode()
             binding.lyrics.setText(newTrack.getSpannedLyrics())
             currentlyViewing = TrackViewModel.afterSave(newTrack.uri)
         }
     }
+
     private fun prevTrack() {
         if (currentlyViewing > 0)
             currentlyViewing -= 1
         else
-            currentlyViewing = TrackViewModel.getCount()-1
+            currentlyViewing = TrackViewModel.getCount() - 1
         val myTrack = TrackViewModel.getTrack(currentlyViewing)
         if (myTrack != null) {
             displayTrack(myTrack)
         }
-        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "View Song (${currentlyViewing+1}/${TrackViewModel.getCount()})"
+        (activity as AppCompatActivity?)!!.supportActionBar!!.title =
+            "View Song (${currentlyViewing + 1}/${TrackViewModel.getCount()})"
 //        MyApplication.playSound(context, SoundAction.PREV_SONG)
     }
+
     private fun nextTrack() {
-        if (currentlyViewing < TrackViewModel.getCount()-1)
+        if (currentlyViewing < TrackViewModel.getCount() - 1)
             currentlyViewing += 1
         else
             currentlyViewing = 0
@@ -321,30 +411,35 @@ class SongFragment : Fragment() {
         if (myTrack != null) {
             displayTrack(myTrack)
         }
-        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "View Song (${currentlyViewing+1}/${TrackViewModel.getCount()})"
+        (activity as AppCompatActivity?)!!.supportActionBar!!.title =
+            "View Song (${currentlyViewing + 1}/${TrackViewModel.getCount()})"
 //        MyApplication.playSound(context, SoundAction.NEXT_SONG)
     }
+
     private fun playTrack() {
 //        val ind = TrackViewModel.getTrackInd(binding.uri.text.toString())
         val action =
-            SongFragmentDirections.actionSongFragmentToHomeFragment()
+            SongFragmentDirections.actionSongFragmentToNameThatTuneFragment()
                 .setTrackURI(binding.uri.text.toString())
         this@SongFragment.findNavController().navigate(action)
     }
+
     private fun editTrack() {
         setToEditMode()
         if (binding.forbiddenLyrics.text.toString() == "")
             binding.forbiddenLyrics.text = binding.trackTitle.text
     }
+
     private fun deleteTrack() {
         fun yesClicked() {
             val myTrack = TrackViewModel.getTrack(binding.uri.text.toString()) ?: return
             TrackViewModel.deleteTrack(myTrack)
             Toast.makeText(activity, getString(R.string.song_deleted), Toast.LENGTH_SHORT).show()
-            MyApplication.playSound(context, SoundAction.DELETE_SONG)
+            MyApplication.playSound(SoundAction.DELETE_ITEM)
             requireActivity().onBackPressed()
             currentlyViewing = TrackViewModel.afterSave(myTrack.uri)
         }
+
         fun noClicked() {
         }
 
@@ -356,27 +451,7 @@ class SongFragment : Fragment() {
             .show()
 
     }
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        for (i in 0 until menu.size()) {
-            if (addTrackMode) {
-                menu.getItem(i).isVisible = false
-            } else {
-                when (menu.getItem(i).itemId) {
-                    R.id.edit, R.id.delete -> menu.getItem(i).isVisible = true
-                    else -> menu.getItem(i).isVisible = false
-                }
-            }
-        }
-        super.onCreateOptionsMenu(menu, inflater)
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.edit -> editTrack()
-            R.id.delete -> deleteTrack()
-        }
-        return super.onOptionsItemSelected(item)
-    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

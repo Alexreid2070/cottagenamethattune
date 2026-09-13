@@ -12,6 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "CottageNameThatTune"
+rootProject.name = "CottageGames"
 include ':app'
 include ':spotify-app-remote'

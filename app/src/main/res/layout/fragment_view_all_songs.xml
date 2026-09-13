@@ -31,7 +31,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="2"
+            android:layout_weight="4"
             android:gravity="start"
             android:text="Song Name"
             android:textSize="16sp"
@@ -43,13 +43,24 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="center"
             android:text="Artist Name"
             android:textSize="16sp"
             android:textStyle="bold"
             android:maxLines="1"/>
 
+        <TextView
+            android:id="@+id/releaseYearHeading"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Rls'd"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:maxLines="1"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -3,17 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/SignInFragment">
 
+    <fragment
+        android:id="@+id/SignInFragment"
+        android:name="com.android.isrbet.cottagenamethattune.SignInFragment"
+        android:label="@string/signin_fragment_label"
+        tools:layout="@layout/fragment_sign_in">
+    </fragment>
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.android.isrbet.cottagenamethattune.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
-    <argument
-        android:name="trackURI"
-        app:argType="string"
-        android:defaultValue=''/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_name_that_tune_game"
+        android:name="com.android.isrbet.cottagenamethattune.NameThatTuneFragment"
+        android:label="@string/title_name_that_tune"
+        tools:layout="@layout/fragment_name_that_tune">
+        <argument
+            android:name="trackURI"
+            app:argType="string"
+            android:defaultValue=''/>
     </fragment>
     <fragment
         android:id="@+id/navigation_view_all_songs"
@@ -23,19 +36,55 @@
         <action
             android:id="@+id/action_ViewAllFragment_to_AddSongFragment"
             app:destination="@id/navigation_song" />
+        <argument
+            android:name="filter"
+            app:argType="string"
+            android:defaultValue=''/>
     </fragment>
-
     <fragment
         android:id="@+id/navigation_song"
         android:name="com.android.isrbet.cottagenamethattune.SongFragment"
         android:label="@string/title_view_song"
         tools:layout="@layout/fragment_song">
         <action
-            android:id="@+id/action_SongFragment_to_HomeFragment"
-            app:destination="@id/navigation_home" />
+            android:id="@+id/action_SongFragment_to_NameThatTuneFragment"
+            app:destination="@id/navigation_name_that_tune_game" />
         <argument
             android:name="trackURI"
             app:argType="string"
             android:defaultValue=''/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_celebrity_game"
+        android:name="com.android.isrbet.cottagenamethattune.CelebrityGameFragment"
+        android:label="@string/title_celebrity"
+        tools:layout="@layout/fragment_celebrity_game">
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_view_all_celebrities"
+        android:name="com.android.isrbet.cottagenamethattune.ViewAllCelebritiesFragment"
+        android:label="@string/title_view_all_celebrities"
+        tools:layout="@layout/fragment_view_all_celebrities">
+        <action
+            android:id="@+id/action_ViewAllFragment_to_AddCelebrityFragment"
+            app:destination="@id/navigation_celebrity" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_celebrity"
+        android:name="com.android.isrbet.cottagenamethattune.CelebrityFragment"
+        android:label="@string/title_view_celebrity"
+        tools:layout="@layout/fragment_celebrity">
+        <argument
+            android:name="celebrityKey"
+            app:argType="string"
+            android:defaultValue=''/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_when_was_that_game"
+        android:name="com.android.isrbet.cottagenamethattune.WhenWasThatFragment"
+        android:label="@string/title_when_was_that"
+        tools:layout="@layout/fragment_when_was_that">
     </fragment>
 </navigation>

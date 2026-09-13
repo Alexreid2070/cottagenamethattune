@@ -1,0 +1,850 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/overall_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    tools:context=".WhenWasThatFragment">
+
+    <nl.dionsegijn.konfetti.KonfettiView
+        android:id="@+id/konfetti_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" />
+
+    <LinearLayout
+        android:id="@+id/configuration_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:paddingTop="5dp">
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/purple_200"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:padding="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingTop="15dp"
+                    android:textSize="16sp"
+                    android:text="@string/options"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/number_of_teams_layout"
+                    android:layout_width="350dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:hint="@string/number_of_teams"
+                    android:minWidth="180dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    app:endIconMode="clear_text"
+                    tools:ignore="NestedWeights">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/number_of_teams"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:enabled="false"
+                        android:gravity="start"
+                        android:inputType="number"
+                        android:text="@string/default_number_of_teams" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tracks_to_win"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"/>
+
+                    <Button
+                        android:id="@+id/game_duration_subtract_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:text="@string/subtract"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="@color/orange"/>
+
+                    <TextView
+                        android:id="@+id/duration_of_game"
+                        android:layout_width="60dp"
+                        android:layout_height="48dp"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:maxLength="3"/>
+
+                    <Button
+                        android:id="@+id/game_duration_add_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:text="@string/add"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="@color/orange"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/duration_of_song_to_play"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"/>
+
+                    <Button
+                        android:id="@+id/song_duration_subtract_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:text="@string/subtract"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="@color/orange"/>
+
+                    <TextView
+                        android:id="@+id/duration_of_song"
+                        android:layout_width="60dp"
+                        android:layout_height="48dp"
+                        android:gravity="center"
+                        android:textSize="16sp"
+                        android:maxLength="3"/>
+
+                    <Button
+                        android:id="@+id/song_duration_add_button"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:text="@string/add"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="@color/orange"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/year_range_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/year_range_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/year_range"
+                        android:tooltipText="Use songs within this range" />
+
+                    <com.google.android.material.slider.RangeSlider
+                        android:id="@+id/year_range_slider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stepSize="1"
+                        android:valueFrom="1930"
+                        android:valueTo="2026" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/play_song_from" />
+
+                    <RadioGroup
+                        android:id="@+id/playModeRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checkedButton="@id/radioStart"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radioStart"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/start" />
+
+                        <RadioButton
+                            android:id="@+id/radioRandom"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/random_location" />
+
+                    </RadioGroup>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/allow_songs_per_year" />
+
+                    <RadioGroup
+                        android:id="@+id/allowDuplicatesRadioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checkedButton="@id/radioAllowDuplicates"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radioAllowDuplicates"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/yes" />
+
+                        <RadioButton
+                            android:id="@+id/radioDontAllowDuplicates"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/no" />
+
+                    </RadioGroup>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <ImageView
+            android:id="@+id/start_button"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:contentDescription="@string/start_game"
+            android:src="@drawable/outline_play_arrow_24" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/deck_front"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/card"
+        android:contentDescription="@string/card"
+        android:enabled="false"
+        android:gravity="center_vertical|center_horizontal"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/deck_back"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/card"
+        android:contentDescription="@string/card"
+        android:enabled="false"
+        android:gravity="center_vertical|center_horizontal"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/team1_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@id/deck_front"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="5dp"
+        android:text="@string/team_1"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/coin_1_5"
+        android:layout_width="@dimen/coin_dimension"
+        android:layout_height="@dimen/coin_dimension"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@id/coin_1_4"
+        android:contentDescription="@string/coin"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/outline_paid_24"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/coin_1_4"
+        android:layout_width="@dimen/coin_dimension"
+        android:layout_height="@dimen/coin_dimension"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@id/coin_1_3"
+        android:contentDescription="@string/coin"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/outline_paid_24"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/coin_1_3"
+        android:layout_width="@dimen/coin_dimension"
+        android:layout_height="@dimen/coin_dimension"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@id/coin_1_2"
+        android:contentDescription="@string/coin"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/outline_paid_24"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/coin_1_2"
+        android:layout_width="@dimen/coin_dimension"
+        android:layout_height="@dimen/coin_dimension"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@id/coin_1_1"
+        android:contentDescription="@string/coin"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/outline_paid_24"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/coin_1_1"
+        android:layout_width="@dimen/coin_dimension"
+        android:layout_height="@dimen/coin_dimension"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/vertical_line"
+        android:contentDescription="@string/coin"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/outline_paid_24"
+        android:visibility="invisible" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="25dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/team1_title"
+        android:layout_toEndOf="@id/deck_front" />
+
+    <HorizontalScrollView
+        android:id="@+id/card_scroll1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/team1_title"
+        android:layout_toStartOf="@id/vertical_line"
+        android:layout_toEndOf="@id/view1"
+        android:visibility="gone"
+        android:requiresFadingEdge="horizontal"
+        android:fadingEdgeLength="100dp"
+        android:fillViewport="true"
+        android:fadeScrollbars="false">
+
+        <LinearLayout
+            android:id="@+id/card_layout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp">
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:id="@+id/user_message1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/horizontal_line"
+        android:layout_toEndOf="@id/deck_front"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/button1_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/card_scroll1"
+        android:layout_toStartOf="@+id/vertical_line"
+        android:layout_toEndOf="@id/deck_front"
+        android:paddingStart="20dp"
+        android:paddingEnd="5dp">
+
+        <Button
+            android:id="@+id/buy_a_card_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:contentDescription="@string/buy_a_card"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:text="@string/buy_a_card"
+            android:textColor="@color/white" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/progress_commit_layout1"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/progress_bar1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:scaleY="9"
+                android:elevation="40dp"
+                android:layout_gravity="center_vertical"
+                style="?android:attr/progressBarStyleHorizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/commit_button1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:contentDescription="@string/commit"
+                android:elevation="4dp"
+                android:scaleType="fitCenter"
+                android:stateListAnimator="@animator/anim"
+                android:text="@string/commit"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/no_challenge_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:contentDescription="@string/no_challenge"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:text="@string/no_challenge"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/challenge_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:contentDescription="@string/challenge"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:text="@string/challenge"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/pass_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:contentDescription="@string/pass"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:text="@string/pass"
+            android:textColor="@color/white"
+            tools:ignore="ButtonStyle" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/yes_coin1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/horizontal_line"
+        android:layout_gravity="end"
+        android:layout_toStartOf="@id/no_coin1"
+        android:backgroundTint="@color/green"
+        android:contentDescription="@string/bank"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        app:icon="@drawable/outline_paid_24"
+        app:iconGravity="textStart"
+        android:text="@string/earned_a_coin"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/no_coin1"
+        android:layout_width="100dp"
+        android:layout_height="@dimen/icon_size"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="5dp"
+        android:layout_above="@id/horizontal_line"
+        android:layout_toStartOf="@id/vertical_line"
+        android:backgroundTint="@color/red"
+        android:contentDescription="@string/bank"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="@string/x"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:visibility="invisible" />
+
+    <View
+        android:id="@+id/horizontal_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_centerInParent="true"
+        android:layout_toStartOf="@id/vertical_line"
+        android:background="@android:color/darker_gray"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/team2_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/horizontal_line"
+        android:layout_toEndOf="@id/deck_front"
+        android:paddingStart="20dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="5dp"
+        android:text="@string/team_2"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/coin_2_5"
+        android:layout_width="@dimen/coin_dimension"
+        android:layout_height="@dimen/coin_dimension"
+        android:layout_below="@id/horizontal_line"
+        android:layout_toStartOf="@id/coin_2_4"
+        android:contentDescription="@string/coin"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/outline_paid_24"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/coin_2_4"
+        android:layout_width="@dimen/coin_dimension"
+        android:layout_height="@dimen/coin_dimension"
+        android:layout_below="@id/horizontal_line"
+        android:layout_toStartOf="@id/coin_2_3"
+        android:contentDescription="@string/coin"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/outline_paid_24"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/coin_2_3"
+        android:layout_width="@dimen/coin_dimension"
+        android:layout_height="@dimen/coin_dimension"
+        android:layout_below="@id/horizontal_line"
+        android:layout_toStartOf="@id/coin_2_2"
+        android:contentDescription="@string/coin"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/outline_paid_24"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/coin_2_2"
+        android:layout_width="@dimen/coin_dimension"
+        android:layout_height="@dimen/coin_dimension"
+        android:layout_below="@id/horizontal_line"
+        android:layout_toStartOf="@id/coin_2_1"
+        android:contentDescription="@string/coin"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/outline_paid_24"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/coin_2_1"
+        android:layout_width="@dimen/coin_dimension"
+        android:layout_height="@dimen/coin_dimension"
+        android:layout_below="@id/horizontal_line"
+        android:layout_toStartOf="@+id/vertical_line"
+        android:contentDescription="@string/coin"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/outline_paid_24"
+        android:visibility="invisible" />
+
+    <View
+        android:id="@+id/view2"
+        android:layout_width="25dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/team2_title"
+        android:layout_toEndOf="@id/deck_front" />
+
+    <HorizontalScrollView
+        android:id="@+id/card_scroll2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/team2_title"
+        android:layout_toStartOf="@id/vertical_line"
+        android:layout_toEndOf="@id/view2"
+        android:visibility="gone"
+        android:requiresFadingEdge="horizontal"
+        android:fadingEdgeLength="100dp"
+        android:fillViewport="true"
+        android:fadeScrollbars="false">
+
+        <LinearLayout
+            android:id="@+id/card_layout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp">
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/button2_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/vertical_line"
+        android:layout_toEndOf="@id/deck_front"
+        android:paddingStart="20dp"
+        android:paddingEnd="5dp">
+
+        <Button
+            android:id="@+id/buy_a_card_button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:contentDescription="@string/buy_a_card"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:text="@string/buy_a_card"
+            android:textColor="@color/white" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/progress_commit_layout2"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content">
+
+            <ProgressBar
+                android:id="@+id/progress_bar2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="15dp"
+                android:elevation="40dp"
+                android:scaleY="9"
+                android:layout_gravity="center_vertical"
+                style="?android:attr/progressBarStyleHorizontal"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <Button
+                android:id="@+id/commit_button2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:contentDescription="@string/commit"
+                android:elevation="4dp"
+                android:scaleType="fitCenter"
+                android:stateListAnimator="@animator/anim"
+                android:text="@string/commit"
+                android:textColor="@color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/no_challenge_button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:contentDescription="@string/no_challenge"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:text="@string/no_challenge"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/challenge_button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:contentDescription="@string/challenge"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:text="@string/challenge"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/pass_button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="15dp"
+            android:contentDescription="@string/pass"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:stateListAnimator="@animator/anim"
+            android:text="@string/pass"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/yes_coin2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="end"
+        android:layout_toStartOf="@id/no_coin2"
+        android:backgroundTint="@color/green"
+        android:contentDescription="@string/bank"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        app:icon="@drawable/outline_paid_24"
+        app:iconGravity="textStart"
+        android:text="@string/earned_a_coin"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/no_coin2"
+        android:layout_width="100dp"
+        android:layout_height="@dimen/icon_size"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="end"
+        android:layout_toStartOf="@+id/vertical_line"
+        android:backgroundTint="@color/red"
+        android:contentDescription="@string/bank"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:text="@string/x"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/user_message2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <View
+        android:id="@+id/vertical_line"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_toStartOf="@id/bank"
+        android:background="@android:color/darker_gray"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/bank"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/bank"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/baseline_savings_24"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/spare_coin"
+        android:layout_width="@dimen/coin_dimension"
+        android:layout_height="@dimen/coin_dimension"
+        android:layout_alignBottom="@+id/bank"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@string/coin"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:src="@drawable/outline_paid_24"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/trash"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@id/vertical_line"
+        android:background="@drawable/outline_delete_24"
+        android:contentDescription="@string/trash"
+        android:gravity="center_vertical|center_horizontal"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+</RelativeLayout>

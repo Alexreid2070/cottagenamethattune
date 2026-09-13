@@ -1,29 +1,37 @@
 package com.android.isrbet.cottagenamethattune
 
 import android.graphics.Color
+import android.icu.text.Collator
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import timber.log.Timber
+import java.util.Collections.reverseOrder
+import java.util.Locale
+
+enum class TracksFilter {
+    All, NameThatTune, WhenWasThat
+}
 
 data class MyTrack(
     var songName: String,
     var artistName: String,
     var uri: String,
     var imageUri: String,
-    var dateAdded: String,
-    var playOrder: Int,
+    var releaseYear: Int,
     var lyrics: MutableList<String>,
-    val forbiddenWords: MutableList<String>) {
+    val forbiddenWords: MutableList<String>
+) {
 
-    fun getKey() : String {
-        return makeKeySafe("$songName - $artistName")
+    fun getKey(): String {
+        return makeKeySafe("${songName.trim()} - ${artistName.trim()}")
     }
+
     fun contains(iSubString: String): Boolean {
         val lc = iSubString.lowercase()
         var contains = songName.lowercase().contains(lc) ||
@@ -35,6 +43,7 @@ data class MyTrack(
         }
         return contains
     }
+
     fun getSpannedLyrics(): SpannableString {
         var lyricsText = ""
         for (i in 0 until lyrics.size) {
@@ -69,7 +78,8 @@ data class MyTrack(
         }
         return spannable
     }
-    fun getForbiddenLyrics() : String {
+
+    fun getForbiddenLyrics(): String {
         var tString = ""
         forbiddenWords.forEach {
             tString = tString + it + "\n"
@@ -77,95 +87,118 @@ data class MyTrack(
         return tString
     }
 }
-/*
-data class MyTrackSimple (
-    var songName: String,
-    var artistName: String,
-    var uri: String,
-    var dateAdded: String,
-    var playOrder: Int) {
-    constructor(myTrack: MyTrack, iPlayOrder: Int) :
-            this(myTrack.songName, myTrack.artistName, myTrack.uri, myTrack.dateAdded, iPlayOrder)
-} */
 
 class TrackViewModel : ViewModel() {
     private var trackListener: ValueEventListener? = null
     private val tracks: MutableList<MyTrack> = ArrayList()
-    private var indOfLastPlayed: Int = -1
-//    private val viewTracks: MutableList<MyTrackSimple> = ArrayList()
-//    private var indOfLastViewed: Int = -1
-//    private var viewSortOrder:SortOrder = SortOrder.by_PLAY_ORDER
-    private var sortOrder:SortOrder = SortOrder.BY_PLAY_ORDER
+    private var sortOrder: SortOrder = SortOrder.BY_SONG_NAME
+    private var currentlyAscending = true
     private var dataUpdatedCallback: DataUpdatedCallback? = null
-    private var loaded:Boolean = false
-    private var dataHasChanged: Boolean = false
+    var loaded: Boolean = false
+    var dataHasChanged: Boolean = false
+    private var myFilter: TracksFilter = TracksFilter.All
+    private var whenWasThatIndex = -1
+    private var nameThatTuneIndex = -1
 
     companion object {
         lateinit var singleInstance: TrackViewModel // used to track static single instance of self
 
-        fun getTracks() : MutableList<MyTrack> {
-            return singleInstance.tracks
+        fun getTracks(iSortOrder: SortOrder = getSortOrder()): MutableList<MyTrack> {
+            if (getMyFilter() == TracksFilter.All) {
+                sortList(iSortOrder, singleInstance.currentlyAscending, singleInstance.tracks)
+                return singleInstance.tracks
+            } else if (getMyFilter() == TracksFilter.NameThatTune) {
+                val tTracks: MutableList<MyTrack> = ArrayList()
+                var mIndex = 0
+
+                while (mIndex < singleInstance.tracks.size) {
+                    if (singleInstance.tracks[mIndex].lyrics.isNotEmpty())
+                        tTracks.add(singleInstance.tracks[mIndex])
+                    mIndex += 1
+                }
+                sortList(iSortOrder, singleInstance.currentlyAscending, tTracks)
+                return tTracks
+            } else {
+                val tTracks: MutableList<MyTrack> = ArrayList()
+                var mIndex = 0
+
+                while (mIndex < singleInstance.tracks.size) {
+                    if (singleInstance.tracks[mIndex].releaseYear > 0)
+                        tTracks.add(singleInstance.tracks[mIndex])
+                    mIndex += 1
+                }
+                sortList(iSortOrder, singleInstance.currentlyAscending, tTracks)
+                return tTracks
+            }
         }
-        fun getSortOrder() : SortOrder {
+
+        fun getMyFilter(): TracksFilter {
+            return singleInstance.myFilter
+        }
+
+        fun setMyFilter(iFilter: TracksFilter) {
+            singleInstance.myFilter = iFilter
+        }
+
+        fun getSortOrder(): SortOrder {
 //            return singleInstance.viewSortOrder
             return singleInstance.sortOrder
         }
-        fun getDataHasChanged() : Boolean {
+
+        fun toggleSortAscending() {
+            singleInstance.currentlyAscending = !singleInstance.currentlyAscending
+        }
+
+        fun getDataHasChanged(): Boolean {
             return singleInstance.dataHasChanged
         }
+
         fun setDataHasChanged(iNewValue: Boolean) {
             singleInstance.dataHasChanged = iNewValue
         }
-/*        fun getIndOfLastPlayed(): Int {
-            return singleInstance.indOfLastPlayed
-        }
-        fun setIndOfLastPlayed(indIn: Int) {
-            singleInstance.indOfLastPlayed = indIn
-        } */
-        fun isLoaded():Boolean {
+
+        fun isLoaded(): Boolean {
             return singleInstance.loaded
         }
-        fun reshufflePlayOrder() {
-            singleInstance.indOfLastPlayed = -1
+
+        fun shuffleForNameThatTune() {
+            singleInstance.nameThatTuneIndex = -1
             singleInstance.tracks.shuffle()
-            for (i in 0 until singleInstance.tracks.size)
-                singleInstance.tracks[i].playOrder = i
         }
 
-        fun getCount() : Int {
+        fun getNextTrackForNameThatTune(): MyTrack {
+            singleInstance.nameThatTuneIndex += 1
+
+            while (singleInstance.tracks[singleInstance.nameThatTuneIndex].lyrics.size <= 1) {
+                Timber.tag("Alex").d("Ignoring ${singleInstance.tracks[singleInstance.nameThatTuneIndex].songName}")
+                singleInstance.nameThatTuneIndex += 1
+            }
+
+            return singleInstance.tracks[singleInstance.nameThatTuneIndex]
+        }
+
+        fun getCount(): Int {
             return if (::singleInstance.isInitialized)
                 singleInstance.tracks.size
             else
                 0
         }
-/*        fun getPrevTrackIndex() : Int {
-            if (singleInstance.indOfLastPlayed > 0)
-                singleInstance.indOfLastPlayed -= 1
-            else
-                singleInstance.indOfLastPlayed = singleInstance.tracks.size-1
-            return singleInstance.indOfLastPlayed
-        }
-        fun getNextTrackIndex() : Int {
-            if (singleInstance.indOfLastPlayed < singleInstance.tracks.size-1)
-                singleInstance.indOfLastPlayed += 1
-            else
-                singleInstance.indOfLastPlayed = 0
-            return  singleInstance.indOfLastPlayed
-        } */
-        fun getTrack(ind: Int) : MyTrack? {
+
+        fun getTrack(ind: Int): MyTrack? {
             return if (ind >= 0 && ind < singleInstance.tracks.size) {
                 singleInstance.tracks[ind]
             } else {
                 null
             }
         }
+
         fun getTrack(uri: String, songName: String = "", artistName: String = ""): MyTrack? {
             var myTrack = singleInstance.tracks.find { it.uri == uri }
-            if (myTrack == null &&
-                (songName != "" && artistName != "")) {
-                myTrack = singleInstance.tracks.find {it.songName == songName && it.artistName == artistName }
+            if (myTrack == null && (songName != "" && artistName != "")) {
+                myTrack =
+                    singleInstance.tracks.find { it.songName == songName && it.artistName == artistName }
             }
-            return  myTrack
+            return myTrack
         }
 
         fun getTrackInd(uri: String): Int {
@@ -176,27 +209,28 @@ class TrackViewModel : ViewModel() {
             }
             return -1
         }
-        fun addTrack(track: MyTrack) : Boolean {
+
+        fun addTrack(track: MyTrack): Boolean {
             // save backup song list
             val key = MyApplication.database.getReference("Songs").push().key.toString()
             MyApplication.database.getReference("Songs")
                 .child(key)
                 .child("songName")
-                .setValue(track.songName)
+                .setValue(track.songName.trim())
             MyApplication.database.getReference("Songs")
                 .child(key)
                 .child("artistName")
-                .setValue(track.artistName)
+                .setValue(track.artistName.trim())
 
             singleInstance.tracks.add(track)
             MyApplication.database.getReference("Tracks")
                 .child(track.getKey())
                 .child("songName")
-                .setValue(track.songName)
+                .setValue(track.songName.trim())
             MyApplication.database.getReference("Tracks")
                 .child(track.getKey())
                 .child("artistName")
-                .setValue(track.artistName)
+                .setValue(track.artistName.trim())
             MyApplication.database.getReference("Tracks")
                 .child(track.getKey())
                 .child("uri")
@@ -207,8 +241,8 @@ class TrackViewModel : ViewModel() {
                 .setValue(track.imageUri)
             MyApplication.database.getReference("Tracks")
                 .child(track.getKey())
-                .child("dateAdded")
-                .setValue(track.dateAdded)
+                .child("releaseYear")
+                .setValue(track.releaseYear)
             MyApplication.database.getReference("Tracks")
                 .child(track.getKey())
                 .child("lyrics")
@@ -220,13 +254,25 @@ class TrackViewModel : ViewModel() {
             return true
         }
 
-        fun editTrack(oldTrack: MyTrack?, newTrack: MyTrack) : Boolean {
+        fun editTrack(oldTrack: MyTrack?, newTrack: MyTrack): Boolean {
             if (oldTrack?.uri != newTrack.uri) {
-                Log.d("Alex", "THESE AREN'T THE SAME SONG, ABORTING")
-                Toast.makeText(MyApplication.myMainActivity, "Editing, but NOT the same song!!!!", Toast.LENGTH_SHORT).show()
+                Timber.tag("Alex").d("THESE AREN'T THE SAME SONG, ABORTING")
+                Toast.makeText(
+                    MyApplication.myMainActivity,
+                    "Editing, but NOT the same song!!!!",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return false
             }
             if (oldTrack.getKey() == newTrack.getKey()) {
+                MyApplication.database.getReference("Tracks")
+                    .child(newTrack.getKey())
+                    .child("songName")
+                    .setValue(newTrack.songName)
+                MyApplication.database.getReference("Tracks")
+                    .child(newTrack.getKey())
+                    .child("artistName")
+                    .setValue(newTrack.artistName)
                 MyApplication.database.getReference("Tracks")
                     .child(newTrack.getKey())
                     .child("uri")
@@ -237,8 +283,8 @@ class TrackViewModel : ViewModel() {
                     .setValue(newTrack.imageUri)
                 MyApplication.database.getReference("Tracks")
                     .child(newTrack.getKey())
-                    .child("dateAdded")
-                    .setValue(newTrack.dateAdded)
+                    .child("releaseYear")
+                    .setValue(newTrack.releaseYear)
                 MyApplication.database.getReference("Tracks")
                     .child(newTrack.getKey())
                     .child("lyrics")
@@ -253,6 +299,7 @@ class TrackViewModel : ViewModel() {
             }
             return true
         }
+
         fun deleteTrack(oldTrack: MyTrack) {
             if (oldTrack.getKey() != "") { // a blank key deletes the entire db!
                 MyApplication.database.getReference("Tracks")
@@ -260,81 +307,97 @@ class TrackViewModel : ViewModel() {
                     .removeValue()
             }
         }
-        fun sortList(iSortOrder: SortOrder) {
-            when (iSortOrder) {
-                SortOrder.BY_PLAY_ORDER -> singleInstance.tracks.sortBy { it.playOrder }
-                SortOrder.BY_DATE_ADDED -> singleInstance.tracks.sortWith(compareBy({ it.dateAdded.lowercase() }, { it.songName.lowercase() }))
-                SortOrder.BY_SONG_NAME -> singleInstance.tracks.sortBy { it.songName.lowercase() }
-                SortOrder.BY_ARTIST_NAME -> singleInstance.tracks.sortBy { it.artistName.lowercase() }
+
+        fun sortList(
+            iSortOrder: SortOrder,
+            iCurrentlyAscending: Boolean,
+            iList: MutableList<MyTrack>
+        ) {
+            val collator = Collator.getInstance(Locale.getDefault()).apply {
+                strength = Collator.PRIMARY
+            }
+            if (iCurrentlyAscending) {
+                singleInstance.currentlyAscending = true
+                when (iSortOrder) {
+                    SortOrder.BY_SONG_NAME -> iList.sortWith(compareBy(collator) { it.songName.lowercase() })
+                    SortOrder.BY_ARTIST_NAME -> iList.sortWith(compareBy(collator) { it.artistName.lowercase() })
+                    SortOrder.BY_RELEASE_YEAR -> iList.sortWith(
+                        compareBy(
+                            { it.releaseYear },
+                            { it.songName.lowercase() })
+                    )
+                }
+            } else {
+                singleInstance.currentlyAscending = false
+                when (iSortOrder) {
+                    SortOrder.BY_SONG_NAME -> iList.sortWith(reverseOrder(compareBy(collator) { it.songName.lowercase() }))
+                    SortOrder.BY_ARTIST_NAME -> iList.sortWith(reverseOrder(compareBy(collator) { it.artistName.lowercase() }))
+                    SortOrder.BY_RELEASE_YEAR -> iList.sortWith(
+                        compareByDescending<MyTrack> { it.releaseYear }
+                            .thenByDescending { it.songName.lowercase() }
+                    )
+                }
             }
             singleInstance.sortOrder = iSortOrder
         }
-/*        fun getViewList() : MutableList<MyTrackSimple> {
-            if (singleInstance.viewTracks.size == 0)
-                refreshViewList()
-            return singleInstance.viewTracks
-        }
-        fun refreshViewList(){
-            singleInstance.viewTracks.clear()
-            singleInstance.tracks.forEach {
-                singleInstance.viewTracks.add(MyTrackSimple(it, singleInstance.viewTracks.size))
-            }
-            sortViewList(singleInstance.viewSortOrder)
-        }
-        fun sortViewList(iSortOrder: SortOrder) {
-            when (iSortOrder) {
-                SortOrder.by_PLAY_ORDER -> singleInstance.viewTracks.sortBy { it.playOrder }
-                SortOrder.by_DATE_ADDED -> singleInstance.viewTracks.sortWith(compareBy({ it.dateAdded.lowercase() }, { it.songName.lowercase() }))
-                SortOrder.by_SONG_NAME -> singleInstance.viewTracks.sortBy { it.songName.lowercase() }
-                SortOrder.by_ARTIST_NAME -> singleInstance.viewTracks.sortBy { it.artistName.lowercase() }
-            }
-            singleInstance.viewSortOrder = iSortOrder
-        }
-        fun getPrevIndToView() : Int {
-            singleInstance.indOfLastViewed = if (singleInstance.indOfLastViewed > 0)
-                singleInstance.indOfLastViewed - 1
-            else
-                singleInstance.viewTracks.size-1
-            return singleInstance.indOfLastViewed
-        }
-        fun getNextIndToView() : Int {
-            singleInstance.indOfLastViewed = if (singleInstance.indOfLastViewed < singleInstance.viewTracks.size-1)
-                singleInstance.indOfLastViewed + 1
-            else
-                0
-            return  singleInstance.indOfLastViewed
-        }
-        fun getTrackToView(ind: Int) : MyTrack? {
-            Log.d("Alex", "ind in is $ind, size is ${singleInstance.viewTracks.size}")
-            return if (ind >= 0 && ind < singleInstance.viewTracks.size) {
-                getTrack(singleInstance.viewTracks[ind].uri)
-            } else {
-                null
-            }
-        }
-        fun setIndOfLastViewed(indIn: Int) {
-            singleInstance.indOfLastViewed = indIn
-        }
-        fun getViewTrackInd(uri: String): Int {
-            for (i in 0 until singleInstance.viewTracks.size) {
-                if (singleInstance.viewTracks[i].uri == uri) {
-                    return i
-                }
-            }
-            return -1
-        } */
-        fun afterSave(iUri: String) : Int {
-            sortList(singleInstance.sortOrder)
+
+        fun afterSave(iUri: String): Int {
+            sortList(
+                singleInstance.sortOrder,
+                singleInstance.currentlyAscending,
+                singleInstance.tracks
+            )
             setDataHasChanged(true)
             return getTrackInd(iUri)
         }
+
+        fun shuffleForWhenWasThat() {
+            singleInstance.tracks.shuffle()
+        }
+
+        fun getNextTrackForWhenWasThat(
+            iMinYear: Int,
+            iMaxYear: Int,
+            iAllowDuplicates: Boolean,
+            iYears: MutableList<Int>
+        ): MyTrack {
+            var yearOK = false
+            var dupOK = false
+
+            singleInstance.whenWasThatIndex += 1
+
+            while (!yearOK || !dupOK) {
+                if (iAllowDuplicates)
+                    dupOK = true
+
+                if (singleInstance.tracks[singleInstance.whenWasThatIndex].releaseYear in iMinYear..iMaxYear) {
+// xxx                if (singleInstance.tracks[singleInstance.whenWasThatIndex].releaseYear in 1979..1979) {
+                    yearOK = true
+                }
+                if (yearOK && !dupOK) { // i.e. don't do this check if it didn't match the year
+                    if (singleInstance.tracks[singleInstance.whenWasThatIndex].releaseYear !in iYears) {
+                        dupOK = true
+                    }
+                }
+                if (!yearOK || !dupOK) {
+                    yearOK = false
+                    dupOK = false
+                    singleInstance.whenWasThatIndex += 1
+                } else
+                    Timber.tag("Alex")
+                        .d("Found ${singleInstance.tracks[singleInstance.whenWasThatIndex].releaseYear}")
+            }
+            Timber.tag("Alex")
+                .d("returned ${singleInstance.tracks[singleInstance.whenWasThatIndex].songName} for When Was That?")
+            return singleInstance.tracks[singleInstance.whenWasThatIndex]
+        }
     }
+
     init {
         singleInstance = this
     }
 
     override fun onCleared() {
-        super.onCleared()
         if (trackListener != null) {
             MyApplication.databaseRef.child("Tracks/")
                 .removeEventListener(trackListener!!)
@@ -342,9 +405,9 @@ class TrackViewModel : ViewModel() {
         }
     }
 
-/*    fun setCallback(iCallback: DataUpdatedCallback?) {
-        dataUpdatedCallback = iCallback
-    } */
+    /*    fun setCallback(iCallback: DataUpdatedCallback?) {
+            dataUpdatedCallback = iCallback
+        } */
 
     fun clearCallback() {
         dataUpdatedCallback = null
@@ -361,21 +424,24 @@ class TrackViewModel : ViewModel() {
                     var artistName = ""
                     var uRI = ""
                     var imageURI = ""
-                    var dateAdded = ""
+                    var releaseYear = 0
                     val lyrics: MutableList<String> = ArrayList()
                     val forbiddenWords: MutableList<String> = ArrayList()
+                    var key = ""
                     for (child in it.children) {
+                        key = it.key.toString()
                         when (child.key.toString()) {
                             "songName" -> songName = child.value.toString().trim()
                             "artistName" -> artistName = child.value.toString().trim()
                             "uri" -> uRI = child.value.toString().trim()
                             "trackUri", "imageUri" -> imageURI = child.value.toString().trim()
-                            "dateAdded" -> dateAdded = child.value.toString().trim()
+                            "releaseYear" -> releaseYear = child.value.toString().toInt()
                             "lyrics" -> {
                                 for (lyric in child.children) {
                                     lyrics.add(lyric.value.toString().trim())
                                 }
                             }
+
                             "forbiddenWords" -> {
                                 for (fWord in child.children) {
                                     forbiddenWords.add(fWord.value.toString().trim())
@@ -383,20 +449,35 @@ class TrackViewModel : ViewModel() {
                             }
                         }
                     }
-                    if (forbiddenWords.size == 0)
+                    if (forbiddenWords.isEmpty())
                         forbiddenWords.add(songName)
-                    tracks.add(MyTrack(songName, artistName, uRI, imageURI, dateAdded, getCount(), lyrics, forbiddenWords))
-//                    Log.d("Songs", "$songName-$artistName")
+                    if (uRI == "")
+                        Timber.tag("Alex").d("ATTENTION has no URI: $songName $artistName")
+                    tracks.add(
+                        MyTrack(
+                            songName,
+                            artistName,
+                            uRI,
+                            imageURI,
+                            releaseYear,
+                            lyrics,
+                            forbiddenWords
+                        )
+                    )
+                    if (songName.trim() == "")
+                        Timber.tag("Alex").d("song $key has no name")
                 }
                 singleInstance.loaded = true
                 dataUpdatedCallback?.onDataUpdate()
-//                tracks.sortWith(compareBy ({ it.dateAdded.lowercase() }, {it.songName.lowercase()}))
-//                reshufflePlayOrder()
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
-                Toast.makeText(MyApplication.myMainActivity, "user authorization failed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    MyApplication.myMainActivity,
+                    "user authorization failed",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         MyApplication.database.getReference("Tracks").addValueEventListener(
@@ -405,6 +486,6 @@ class TrackViewModel : ViewModel() {
     }
 }
 
-interface DataUpdatedCallback  {
+interface DataUpdatedCallback {
     fun onDataUpdate()
 }
