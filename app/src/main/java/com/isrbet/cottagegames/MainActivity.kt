@@ -1,4 +1,4 @@
-package com.android.isrbet.cottagenamethattune
+package com.isrbet.cottagegames
 
 import android.accounts.Account
 import android.app.Application
@@ -22,7 +22,7 @@ import androidx.core.content.ContextCompat.createAttributionContext
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuProvider
 import androidx.navigation.fragment.NavHostFragment
-import com.android.isrbet.cottagenamethattune.databinding.ActivityMainBinding
+import com.isrbet.cottagegames.databinding.ActivityMainBinding
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
@@ -78,8 +78,9 @@ class MainActivity : AppCompatActivity() {
                 if (menuItem.itemId == android.R.id.home) {
                     binding.drawerLayout.openDrawer(GravityCompat.START)
                     return true
-                } else
+                } else {
                     return false
+                }
             }
         })
 

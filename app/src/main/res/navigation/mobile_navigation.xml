@@ -7,20 +7,20 @@
 
     <fragment
         android:id="@+id/SignInFragment"
-        android:name="com.android.isrbet.cottagenamethattune.SignInFragment"
+        android:name="com.isrbet.cottagegames.SignInFragment"
         android:label="@string/signin_fragment_label"
         tools:layout="@layout/fragment_sign_in">
     </fragment>
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.android.isrbet.cottagenamethattune.HomeFragment"
+        android:name="com.isrbet.cottagegames.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
 
     </fragment>
     <fragment
         android:id="@+id/navigation_name_that_tune_game"
-        android:name="com.android.isrbet.cottagenamethattune.NameThatTuneFragment"
+        android:name="com.isrbet.cottagegames.NameThatTuneFragment"
         android:label="@string/title_name_that_tune"
         tools:layout="@layout/fragment_name_that_tune">
         <argument
@@ -30,7 +30,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_view_all_songs"
-        android:name="com.android.isrbet.cottagenamethattune.ViewAllSongsFragment"
+        android:name="com.isrbet.cottagegames.ViewAllSongsFragment"
         android:label="@string/title_view_all_songs"
         tools:layout="@layout/fragment_view_all_songs">
         <action
@@ -43,7 +43,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_song"
-        android:name="com.android.isrbet.cottagenamethattune.SongFragment"
+        android:name="com.isrbet.cottagegames.SongFragment"
         android:label="@string/title_view_song"
         tools:layout="@layout/fragment_song">
         <action
@@ -57,13 +57,13 @@
 
     <fragment
         android:id="@+id/navigation_celebrity_game"
-        android:name="com.android.isrbet.cottagenamethattune.CelebrityGameFragment"
+        android:name="com.isrbet.cottagegames.CelebrityGameFragment"
         android:label="@string/title_celebrity"
         tools:layout="@layout/fragment_celebrity_game">
     </fragment>
     <fragment
         android:id="@+id/navigation_view_all_celebrities"
-        android:name="com.android.isrbet.cottagenamethattune.ViewAllCelebritiesFragment"
+        android:name="com.isrbet.cottagegames.ViewAllCelebritiesFragment"
         android:label="@string/title_view_all_celebrities"
         tools:layout="@layout/fragment_view_all_celebrities">
         <action
@@ -72,7 +72,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_celebrity"
-        android:name="com.android.isrbet.cottagenamethattune.CelebrityFragment"
+        android:name="com.isrbet.cottagegames.CelebrityFragment"
         android:label="@string/title_view_celebrity"
         tools:layout="@layout/fragment_celebrity">
         <argument
@@ -83,7 +83,7 @@
 
     <fragment
         android:id="@+id/navigation_when_was_that_game"
-        android:name="com.android.isrbet.cottagenamethattune.WhenWasThatFragment"
+        android:name="com.isrbet.cottagegames.WhenWasThatFragment"
         android:label="@string/title_when_was_that"
         tools:layout="@layout/fragment_when_was_that">
     </fragment>

@@ -1,4 +1,4 @@
-package com.android.isrbet.cottagenamethattune
+package com.isrbet.cottagegames
 
 import org.junit.Test
 

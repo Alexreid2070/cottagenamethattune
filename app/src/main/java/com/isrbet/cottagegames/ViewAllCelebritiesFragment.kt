@@ -1,4 +1,4 @@
-package com.android.isrbet.cottagenamethattune
+package com.isrbet.cottagegames
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,8 +12,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.android.isrbet.cottagenamethattune.MyApplication.Companion.celebritySearchText
-import com.android.isrbet.cottagenamethattune.databinding.FragmentViewAllCelebritiesBinding
+import com.isrbet.cottagegames.MyApplication.Companion.celebritySearchText
+import com.isrbet.cottagegames.databinding.FragmentViewAllCelebritiesBinding
 import timber.log.Timber
 import androidx.core.view.isGone
 

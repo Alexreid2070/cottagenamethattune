@@ -1,4 +1,4 @@
-package com.android.isrbet.cottagenamethattune
+package com.isrbet.cottagegames
 
 import android.widget.Toast
 import androidx.lifecycle.ViewModel

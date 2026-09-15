@@ -1,4 +1,4 @@
-package com.android.isrbet.cottagenamethattune
+package com.isrbet.cottagegames
 
 import android.graphics.Color
 import android.os.Bundle
@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import com.android.isrbet.cottagenamethattune.databinding.FragmentCelebrityGameBinding
+import com.isrbet.cottagegames.databinding.FragmentCelebrityGameBinding
 import timber.log.Timber
 import nl.dionsegijn.konfetti.models.Shape
 import nl.dionsegijn.konfetti.models.Size

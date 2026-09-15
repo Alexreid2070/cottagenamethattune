@@ -1,4 +1,4 @@
-package com.android.isrbet.cottagenamethattune
+package com.isrbet.cottagegames
 
 import android.content.Context
 import android.os.Bundle
@@ -26,7 +26,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.google.firebase.Firebase
-import com.android.isrbet.cottagenamethattune.databinding.FragmentSignInBinding
+import com.isrbet.cottagegames.databinding.FragmentSignInBinding
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

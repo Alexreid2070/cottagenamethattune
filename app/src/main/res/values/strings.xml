@@ -9,7 +9,6 @@
     <string name="song_deleted">Song was deleted.</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="are_you_sure_that_you_want_to_delete_this_item_NP">Are you sure that you want to delete this item?</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_name_that_tune">Name That Tune!</string>
     <string name="title_when_was_that">When Was That?!</string>
@@ -45,8 +44,7 @@
     <string name="coin">Coin</string>
     <string name="trash">trash</string>
     <string name="bank">Bank</string>
-    <string name="number_of_teams">Number of Teams</string>
-    <string name="duration_to_play">Duration to play</string>
+    <string name="number_of_teams">Number of Teams: </string>
     <string name="team_1">Team 1</string>
     <string name="team_2">Team 2</string>
     <string name="duration_of_song_to_play">Duration of song to play (seconds): </string>
@@ -67,4 +65,6 @@
     <string name="no">No</string>
     <string name="earned_a_coin">Earned a coin!</string>
     <string name="x">X</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

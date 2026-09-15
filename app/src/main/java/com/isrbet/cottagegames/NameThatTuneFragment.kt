@@ -1,4 +1,4 @@
-package com.android.isrbet.cottagenamethattune
+package com.isrbet.cottagegames
 
 import android.os.Bundle
 import android.util.TypedValue
@@ -9,7 +9,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
-import com.android.isrbet.cottagenamethattune.databinding.FragmentNameThatTuneBinding
+import com.isrbet.cottagegames.databinding.FragmentNameThatTuneBinding
 import com.spotify.protocol.types.ImageUri
 import timber.log.Timber
 

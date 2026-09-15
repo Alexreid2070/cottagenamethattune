@@ -1,4 +1,4 @@
-package com.android.isrbet.cottagenamethattune
+package com.isrbet.cottagegames
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -7,11 +7,9 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.android.isrbet.cottagenamethattune.databinding.FragmentHomeBinding
+import com.isrbet.cottagegames.databinding.FragmentHomeBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.navigation.NavigationView
@@ -81,7 +79,7 @@ class HomeFragment : Fragment() {
                 .setTitle(getString(R.string.are_you_sure))
                 .setMessage("Are you sure that you want to sign out?")
                 .setPositiveButton("Sign out") { _, _ -> signOut() }
-                .setNegativeButton(android.R.string.cancel) { _, _ -> }  // nothing should happen, other than dialog closes
+                .setNegativeButton(R.string.cancel) { _, _ -> }  // nothing should happen, other than dialog closes
                 .show()
         }
         signOutButton.setOnClickListener {
@@ -89,7 +87,7 @@ class HomeFragment : Fragment() {
                 .setTitle(getString(R.string.are_you_sure))
                 .setMessage("Are you sure that you want to sign out?")
                 .setPositiveButton("Sign out") { _, _ -> signOut() }
-                .setNegativeButton(android.R.string.cancel) { _, _ -> }  // nothing should happen, other than dialog closes
+                .setNegativeButton(R.string.cancel) { _, _ -> }  // nothing should happen, other than dialog closes
                 .show()
         }
     }
@@ -148,18 +146,45 @@ class HomeFragment : Fragment() {
 data class SongToUpload(val songName: String, val artistName: String, val releaseYear: Int)
 
 val songsToUpload = arrayOf(
-    SongToUpload("Itsy Bitsy Teenie Weenie Yellow Polka Dot Bikini", "Brian Hyland", 1960),
-    SongToUpload("Jack and Diane", "John Cougar Mellencamp", 1982),
-    SongToUpload("Jackie Blue", "The Ozark Mountain Daredevils", 1975),
-    SongToUpload("Jacob's Ladder", "Huey Lewis & The News", 1986),
-    SongToUpload("Jealous", "Chromeo", 2014),
-    SongToUpload("Jeopardy", "Greg Kihn Band", 1983),
-    SongToUpload("Jessie's Girl", "Rick Springfield", 1981),
-    SongToUpload("Jet Lag", "Simple Plan", 2011),
-    SongToUpload("Joanna", "Kool & The Gang", 1983),
-    SongToUpload("Johnny Angel", "Shelley Fabares", 1962),
-    SongToUpload("Joyride", "Roxette", 1991),
-    SongToUpload("Judy in Disguise (With Glasses)", "John Fred & His Playboy Band", 1967),
-    SongToUpload("Juice", "Lizzo", 2019),
-    SongToUpload("Jump", "Kris Kross", 1992)
+    SongToUpload("Want Ads", "The Honey Cone", 1971),
+    SongToUpload("Wanted", "Perry Como", 1954),
+    SongToUpload("Wasting My Time", "Default", 2001),
+    SongToUpload("We Are Stars", "Virginia to Vegas", 2014),
+    SongToUpload("We Belong", "Pat Benatar", 1984),
+    SongToUpload("We Built This City", "Starship", 1985),
+    SongToUpload("We Can Work It Out", "The Beatles", 1965),
+    SongToUpload("We Didn't Start The Fire", "Billy Joel", 1989),
+    SongToUpload("We Got The Beat", "Go-Go's", 1982),
+    SongToUpload("We Run", "Strange Advance", 1985),
+    SongToUpload("We’re Here For A Good Time", "Trooper", 1977),
+    SongToUpload("We've Got Tonight", "Bob Seger", 1978),
+    SongToUpload("Wedding Bell Blues", "The 5th Dimension", 1969),
+    SongToUpload("Weekend", "The Dictators", 1975),
+    SongToUpload("Welcome Back", "John Sebastian", 1976),
+    SongToUpload("What a Fool Believes", "The Doobie Brothers", 1979),
+    SongToUpload("What About Us", "Pink", 2017),
+    SongToUpload("What I Wouldn’t Do", "Serena Ryder", 2012),
+    SongToUpload("What Is Love", "Haddaway", 1992),
+    SongToUpload("What You Need", "INXS", 1986),
+    SongToUpload("What's On Your Mind (Pure Energy)", "Information Society", 1988),
+    SongToUpload("Whatever Gets You Thru the Night", "John Lennon", 1974),
+    SongToUpload("Whatever It Takes", "Imagine Dragons", 2017),
+    SongToUpload("Wheel in the Sky", "Journey", 1978),
+    SongToUpload("Wheel Of Fortune", "Kay Starr", 1952),
+    SongToUpload("When A Man Loves A Woman", "Michael Bolton", 1991),
+    SongToUpload("When A Man Loves A Woman", "Percy Sledge", 1966),
+    SongToUpload("When I Need You", "Leo Sayer", 1977),
+    SongToUpload("When I See U", "Fantasia", 2006),
+    SongToUpload("When I See You Smile", "Bad English", 1989),
+    SongToUpload("When I Think Of You", "Janet Jackson", 1986),
+    SongToUpload("When I’m Up (I Can’t Get Down)", "Great Big Sea", 1997),
+    SongToUpload("When I'm With You", "Sheriff", 1983),
+    SongToUpload("When The Going Gets Tough, The Tough Get Going", "Billy Ocean", 1985),
+    SongToUpload("When the Night Feels My Song", "Bedouin Soundclash", 2004),
+    SongToUpload("When You're Gone", "Avril Lavigne", 2007),
+    SongToUpload("Where Do Broken Hearts Go", "Whitney Houston", 1988),
+    SongToUpload("Where Were You (When the World Stopped Turning)", "Alan Jackson", 2003),
+    SongToUpload("Wherever You Will Go", "The Calling", 2001),
+    SongToUpload("Who Can It Be Now?", "Men At Work", 1981),
+    SongToUpload("Who Knew", "Pink", 2006)
 )

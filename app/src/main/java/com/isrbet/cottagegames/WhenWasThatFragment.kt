@@ -1,4 +1,4 @@
-package com.android.isrbet.cottagenamethattune
+package com.isrbet.cottagegames
 
 import android.animation.Animator
 import android.animation.AnimatorInflater
@@ -22,7 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnEnd
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.android.isrbet.cottagenamethattune.databinding.FragmentWhenWasThatBinding
+import com.isrbet.cottagegames.databinding.FragmentWhenWasThatBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -40,6 +40,7 @@ import androidx.core.view.children
 import androidx.core.view.isEmpty
 import androidx.core.widget.TextViewCompat
 import java.time.Year
+import kotlin.collections.get
 import kotlin.text.toInt
 
 enum class WhenWasThatGameState {
@@ -53,7 +54,7 @@ enum class PlayMode {
 
 var gTimeToPlay = 10
 var gTracksToWin = 10
-var gPlayMode = PlayMode.FromStart
+var gPlayMode = PlayMode.Random
 var gYearRangeMinimum = 1930
 var gYearRangeMaximum = Year.now().value
 var gAllowDuplicates = true
@@ -156,6 +157,21 @@ class WhenWasThatFragment : Fragment() {
 
         (activity as AppCompatActivity?)!!.supportActionBar!!.title =
             getString(R.string.title_when_was_that)
+
+        binding.numberOfTeams.text = "2"
+        binding.numberOfTeamsAddButton.setOnClickListener {
+            val current = binding.numberOfTeams.text.toString().toInt()
+            if (current < 6) {
+                binding.numberOfTeams.text = (current + 1).toString()
+            }
+        }
+
+        binding.numberOfTeamsSubtractButton.setOnClickListener {
+            val current = binding.numberOfTeams.text.toString().toInt()
+            if (current > 0) {
+                binding.numberOfTeams.text = (current - 1).toString()
+            }
+        }
 
         binding.durationOfGame.text = "10"
         binding.gameDurationAddButton.setOnClickListener {
@@ -644,7 +660,7 @@ class WhenWasThatFragment : Fragment() {
         TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(
             frontDeck,
             12,          // minSize
-            30,          // maxSize
+            24,          // maxSize
             2,           // stepGranularity
             TypedValue.COMPLEX_UNIT_SP // text unit type
         )

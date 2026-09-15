@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace 'com.android.isrbet.cottagenamethattune'
+    namespace 'com.isrbet.cottagegames'
     compileSdk = 37
     dataBinding {
         enabled = true
     }
     defaultConfig {
-        applicationId "com.android.isrbet.cottagenamethattune"
+        applicationId "com.isrbet.cottagegames"
         minSdk 29
         targetSdk 37
         versionCode 2

@@ -1,4 +1,4 @@
-package com.android.isrbet.cottagenamethattune
+package com.isrbet.cottagegames
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -9,7 +9,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
-import com.android.isrbet.cottagenamethattune.databinding.FragmentCelebrityBinding
+import com.isrbet.cottagegames.databinding.FragmentCelebrityBinding
 import timber.log.Timber
 
 class CelebrityFragment : Fragment() {
@@ -224,8 +224,8 @@ class CelebrityFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.are_you_sure))
             .setMessage(getString(R.string.are_you_sure_that_you_want_to_delete_this_item_NP))
-            .setPositiveButton(android.R.string.ok) { _, _ -> yesClicked() }
-            .setNegativeButton(android.R.string.cancel) { _, _ -> noClicked() }
+            .setPositiveButton(R.string.ok) { _, _ -> yesClicked() }
+            .setNegativeButton(R.string.cancel) { _, _ -> noClicked() }
             .show()
 
     }

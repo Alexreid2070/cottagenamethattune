@@ -1,4 +1,4 @@
-package com.android.isrbet.cottagenamethattune
+package com.isrbet.cottagegames
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -100,7 +100,7 @@ enum class PlayingState {
 }
 object SpotifyService {
     private const val CLIENT_ID = "0e89c49178bf4deeaaaeb11e78e4eb87"
-    private const val REDIRECT_URI = "https://com.android.isrbet.cottagenamethattune/callback"
+    private const val REDIRECT_URI = "https://com.isrbet.cottagegames/callback"
     private var spotifyAppRemote: SpotifyAppRemote? = null
     private var currentURI = ""
     private var connectionParams: ConnectionParams = ConnectionParams.Builder(CLIENT_ID)
@@ -211,7 +211,7 @@ object SpotifyService {
             song.songName,
             song.artistName,
             uri,
-            mytrack.imageUri.raw.toString(),
+           mytrack.imageUri.raw.toString(),
             song.releaseYear,
             mutableListOf(),
             mutableListOf()
